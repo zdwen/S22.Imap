@@ -23,7 +23,7 @@ namespace S22.Imap.Test {
 	            // Returns a collection of identifiers of all mails matching the specified search criteria.
 	            IEnumerable<uint> uids = client.Search(SearchCondition.Unseen());
 	            // Download mail messages from the default mailbox.
-	            IEnumerable<MailMessage> messages = client.GetMessages(uids);
+	            IEnumerable<MailMessage> messages = client.GetMessages(new uint[] { (uint)1519396929 },FetchOptions.HtmlOnly);
 
                 Console.WriteLine("We are connected!");
 	        }

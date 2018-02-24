@@ -8,6 +8,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace S22.Imap {
+
+    
+
 	/// <summary>
 	/// Adds extension methods to the MailMessage class of the .NET Framework.
 	/// </summary>

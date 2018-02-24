@@ -61,7 +61,7 @@ namespace S22.Imap {
 		/// <returns>An initialized instance of the MailMessage class.</returns>
 		/// <remarks>This is used when fetching entire messages instead of the partial-fetch mechanism
 		/// because it saves redundant round-trips to the server.</remarks>
-		internal static MailMessage FromMIME822(string text) {
+		internal static MailMessage FromMIME822(string text,bool getHtml = false) {
 			StringReader reader = new StringReader(text);
 			StringBuilder header = new StringBuilder();
 			string line;
@@ -70,7 +70,7 @@ namespace S22.Imap {
 			MailMessage m = FromHeader(header.ToString());
 			MIMEPart[] parts = ParseMailBody(reader.ReadToEnd(), m.Headers);
 			foreach (MIMEPart p in parts)
-				m.AddBodypart(BodypartFromMIME(p), p.body);
+				m.AddBodypart(BodypartFromMIME(p), p.body, getHtml);
 			return m;
 		}
 
@@ -326,7 +326,7 @@ namespace S22.Imap {
 		/// <param name="message">Extension method for the MailMessage class.</param>
 		/// <param name="part">The body part to add to the MailMessage instance.</param>
 		/// <param name="content">The content of the body part.</param>
-		internal static void AddBodypart(this MailMessage message, Bodypart part, string content) {
+		internal static void AddBodypart(this MailMessage message, Bodypart part, string content,bool getHtml = false) {
 			Encoding encoding = part.Parameters.ContainsKey("Charset") ?
 				Util.GetEncoding(part.Parameters["Charset"]) : Encoding.ASCII;
 			// Decode the content if it is encoded.
@@ -355,12 +355,25 @@ namespace S22.Imap {
 			// If the MailMessage's Body fields haven't been initialized yet, put it there. Some weird
 			// (i.e. spam) mails like to omit content-types so we don't check for that here and just
 			// assume it's text.
-			if (String.IsNullOrEmpty(message.Body) &&
-				part.Disposition.Type != ContentDispositionType.Attachment) {
-				message.Body = encoding.GetString(bytes);
+			if (part.Disposition.Type != ContentDispositionType.Attachment) {
+			    
 				message.BodyEncoding = encoding;
 				message.IsBodyHtml = part.Subtype.ToLower() == "html";
-				return;
+			    if (!string.IsNullOrEmpty(message.Body))
+			    {
+			        if (getHtml && message.IsBodyHtml)
+			        {
+			            message.Body = encoding.GetString(bytes);
+			        }
+			        else
+			        {
+			            message.Body += (message.IsBodyHtml ? ("[[--html--]]") : "") + encoding.GetString(bytes);
+                    }
+			        
+			        return;
+			    }
+			    message.Body = encoding.GetString(bytes);
+                return;
 			}
 
 			// Check for alternative view.

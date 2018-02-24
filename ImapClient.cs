@@ -1112,7 +1112,9 @@ namespace S22.Imap {
 				case FetchOptions.TextOnly:
 					return GetMessage(uid, p => { return p.Type == ContentType.Text; },
 						seen, mailbox);
-				default:
+			    case FetchOptions.HtmlOnly:
+			        return MessageBuilder.FromMIME822(GetMessageData(uid, seen, mailbox),true);
+                default:
 					return MessageBuilder.FromMIME822(GetMessageData(uid, seen, mailbox));
 			}
 		}

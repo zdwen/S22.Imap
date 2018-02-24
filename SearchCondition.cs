@@ -348,7 +348,7 @@ namespace S22.Imap {
 		/// The search keys which can be used with the IMAP SEARCH command, as are defined in section
 		/// 6.4.4 of RFC 3501.
 		/// </summary>
-		enum Fields {
+		public enum Fields {
 			BCC, Before, Body, Cc, From, Header, Keyword,
 			Larger, On, SentBefore, SentOn, SentSince, Since, Smaller, Subject,
 			Text, To, UID, Unkeyword, All, Answered, Deleted, Draft, Flagged,
@@ -356,7 +356,7 @@ namespace S22.Imap {
 		}
 
 		object Value { get; set; }
-		Fields? Field { get; set; }
+		public Fields? Field { get; set; }
 		List<SearchCondition> Conditions { get; set; }
 		string Operator { get; set; }
 		bool Quote = true;

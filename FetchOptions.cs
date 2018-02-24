@@ -21,6 +21,10 @@ namespace S22.Imap {
 		/// attachments.
 		/// </summary>
 		TextOnly,
+        /// <summary>
+        /// 只获取html
+        /// </summary>
+        HtmlOnly,
 		/// <summary>
 		/// Retrieves the mail message, but skips any content that is an attachment.
 		/// </summary>
