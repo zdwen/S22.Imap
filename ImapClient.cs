@@ -192,6 +192,10 @@ namespace S22.Imap {
 		public ImapClient(string hostname, int port, string username, string password, AuthMethod method =
 			AuthMethod.Auto, bool ssl = false, RemoteCertificateValidationCallback validate = null) {
 			Connect(hostname, port, ssl, validate);
+		    if (hostname.EndsWith("163.com"))
+		    {
+		        ID();
+		    }
 			Login(username, password, method);
 		}
 
@@ -244,6 +248,13 @@ namespace S22.Imap {
 			return v.StartsWith("OK");
 		}
 
+	    public void ID()
+	    {
+            var tag = GetTag();
+            var command =
+	            "ID (\"name\" \"com.tencent.foxmail\" \"version\" \"7.2.9.79\" \"os\" \"windows\" \"os-version\" \"6.1\" \"vendor\" \"tencent limited\" \"contact\" \"foxmail@foxmail.com\")";
+	        var rps = SendCommandGetResponse(tag + command, true, true);
+        }
 		/// <summary>
 		/// Attempts to establish an authenticated session with the server using the specified
 		/// credentials.
@@ -264,10 +275,10 @@ namespace S22.Imap {
 		public void Login(string username, string password, AuthMethod method) {
 			username.ThrowIfNull("username");
 			password.ThrowIfNull("password");
-			string tag = GetTag(), response;
+            string tag = GetTag(), response;
 			switch (method) {
 				case AuthMethod.Login:
-					response = Login(tag, username, password);
+                    response = Login(tag, username, password);
 					break;
 				case AuthMethod.Auto:
 					response = AuthAuto(tag, username, password);
@@ -487,12 +498,13 @@ namespace S22.Imap {
 		/// <param name="resolveLiterals">Set to true to resolve possible literals returned by the
 		/// server (Refer to RFC 3501 Section 4.3 for details).</param>
 		/// <returns>The response received by the server.</returns>
-		string SendCommandGetResponse(string command, bool resolveLiterals = true) {
+		string SendCommandGetResponse(string command, bool resolveLiterals = true,bool aaa = false) {
 			lock (readLock) {
 				lock (writeLock) {
 					SendCommand(command);
 				}
-				return GetResponse(resolveLiterals);
+			    if (aaa) GetResponse(resolveLiterals);
+                return GetResponse(resolveLiterals);
 			}
 		}
 
@@ -551,7 +563,7 @@ namespace S22.Imap {
 						byteCount = byteCount - read;
 					}
 				}
-				string s = Encoding.ASCII.GetString(mem.ToArray());
+				string s = Encoding.UTF8.GetString(mem.ToArray());
 				ts.TraceInformation("S -> " + s);
 				return s;
 			}

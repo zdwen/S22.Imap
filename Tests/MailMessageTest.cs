@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -9,10 +11,29 @@ namespace S22.Imap.Test {
 	/// </summary>
 	[TestClass]
 	public class MailMessageTest {
-		/// <summary>
-		/// Basic Mailadress to and from convertion test.
-		/// </summary>
-		[TestMethod]
+
+	    [TestMethod]
+	    [TestCategory("163")]
+	    public void Test163()
+	    {
+	        var imapServer = "imap.163.com";
+	        var port = 993;
+	        using (ImapClient client = new ImapClient(imapServer, port, "13012882226@163.com", "", AuthMethod.Login, true))
+	        {
+	            // Returns a collection of identifiers of all mails matching the specified search criteria.
+	            IEnumerable<uint> uids = client.Search(SearchCondition.Unseen());
+	            // Download mail messages from the default mailbox.
+	            IEnumerable<MailMessage> messages = client.GetMessages(uids);
+
+                Console.WriteLine("We are connected!");
+	        }
+
+        }
+
+        /// <summary>
+        /// Basic Mailadress to and from convertion test.
+        /// </summary>
+        [TestMethod]
 		[TestCategory("MailMessageToMIME822")]
 		public void AddressToMIME822()
 		{
