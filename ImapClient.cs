@@ -248,12 +248,17 @@ namespace S22.Imap {
 			return v.StartsWith("OK");
 		}
 
+        /// <summary>
+        /// 兼容163 imap协议 在login之前 必须先发送ID命令
+        /// </summary>
 	    public void ID()
 	    {
             var tag = GetTag();
             var command =
 	            "ID (\"name\" \"com.tencent.foxmail\" \"version\" \"7.2.9.79\" \"os\" \"windows\" \"os-version\" \"6.1\" \"vendor\" \"tencent limited\" \"contact\" \"foxmail@foxmail.com\")";
-	        var rps = SendCommandGetResponse(tag + command, true, true);
+	        var response = SendCommandGetResponse(tag + command, true, true);
+	        if (!IsResponseOK(response, tag))
+	            throw new InvalidCredentialsException(response);
         }
 		/// <summary>
 		/// Attempts to establish an authenticated session with the server using the specified

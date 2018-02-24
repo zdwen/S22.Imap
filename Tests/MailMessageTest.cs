@@ -18,12 +18,12 @@ namespace S22.Imap.Test {
 	    {
 	        var imapServer = "imap.163.com";
 	        var port = 993;
-	        using (ImapClient client = new ImapClient(imapServer, port, "13012882226@163.com", "", AuthMethod.Login, true))
+	        using (ImapClient client = new ImapClient(imapServer, port, "xxx@163.com", "", AuthMethod.Login, true))
 	        {
 	            // Returns a collection of identifiers of all mails matching the specified search criteria.
 	            IEnumerable<uint> uids = client.Search(SearchCondition.Unseen());
 	            // Download mail messages from the default mailbox.
-	            IEnumerable<MailMessage> messages = client.GetMessages(new uint[] { (uint)1519396929 },FetchOptions.HtmlOnly);
+	            IEnumerable<MailMessage> messages = client.GetMessages(uids,FetchOptions.HtmlOnly);
 
                 Console.WriteLine("We are connected!");
 	        }
