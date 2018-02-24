@@ -1,3 +1,7 @@
+### 改动部分 2018-2-24  by yuzd
+针对163 imap做特殊处理 防止出现login失败
+读取邮件内容改成默认用 utf-8
+
 ### Introduction
 
 This repository contains an easy-to-use and well-documented .NET assembly for communicating with and
