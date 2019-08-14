@@ -2,6 +2,8 @@
 针对163 imap做特殊处理 防止出现login失败
 读取邮件内容改成默认用 utf-8
 
+### 注意：我修改的部分只测试了 163 imap，请大家直接用 MailKit  2019-08-14 by yuzd
+
 ### Introduction
 
 This repository contains an easy-to-use and well-documented .NET assembly for communicating with and
