@@ -192,10 +192,10 @@ namespace S22.Imap {
 		public ImapClient(string hostname, int port, string username, string password, AuthMethod method =
 			AuthMethod.Auto, bool ssl = false, RemoteCertificateValidationCallback validate = null) {
 			Connect(hostname, port, ssl, validate);
-		    if (hostname.EndsWith("163.com"))
-		    {
-		        ID();
-		    }
+            if (hostname.EndsWith("163.com") || hostname.EndsWith("126.com") || hostname.EndsWith("yeah.net"))
+            {
+                ID();
+            }
 			Login(username, password, method);
 		}
 
